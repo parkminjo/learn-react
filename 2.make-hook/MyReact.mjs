@@ -26,4 +26,24 @@ export const useState = (initialValue) => {
   return [hooks[currentHook++], setState];
 };
 
+export const useEffect = (callback, depArray) => {
+  const hasNoDeps = !depArray;
+  const prevDeps = hooks[currentHook] ? hooks[currentHook].deps : undefined;
+
+  const prevCleanup = hooks[currentHook]
+    ? hooks[currentHook].cleanup
+    : undefined;
+
+  const hasChangedDeps = prevDeps
+    ? !depArray.every((el, i) => el === prevDeps[i])
+    : true;
+
+  if (hasNoDeps || hasChangedDeps) {
+    if (prevCleanup) prevCleanup();
+    const cleanup = callback();
+    hooks[currentHook] = { deps: depArray, cleanup };
+  }
+  currentHook++;
+};
+
 export default MyReact;
