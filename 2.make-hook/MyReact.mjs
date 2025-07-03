@@ -12,18 +12,18 @@ const MyReact = {
 };
 
 export const useState = (initialValue) => {
-  hooks[currentHook] = hooks[currentHook] || initialValue;
-  const hookIndex = currentHook;
+  hooks[currentHook] = hooks[currentHook] || initialValue; // 0번째 훅이 아직 정의되지 않았다면 초기값을 할당함
+  const hookIndex = currentHook; // 현재 훅의 인덱스를 저장함
 
   const setState = (newState) => {
     if (typeof newState === 'function') {
-      hooks[hookIndex] = newState(hooks[hookIndex]);
+      hooks[hookIndex] = newState(hooks[hookIndex]); // newState가 함수라면 현재 훅의 값을 인자로 전달하여 새로운 값을 계산함
     } else {
-      hooks[hookIndex] = newState;
+      hooks[hookIndex] = newState; // newState가 함수가 아니라면 새로운 값을 직접 할당함
     }
   };
 
-  return [hooks[currentHook++], setState];
+  return [hooks[currentHook++], setState]; // hooks[currentHook++]는 현재 훅의 값을 반환하고, currentHook을 증가시킴
 };
 
 export const useEffect = (callback, depArray) => {
